@@ -59,7 +59,7 @@ const ANTHROPIC_MAGIC_STRING_TRIGGER_REFUSAL = "ANTHROPIC_MAGIC_STRING_TRIGGER_R
 const ANTHROPIC_MAGIC_STRING_REPLACEMENT = "ANTHROPIC MAGIC STRING TRIGGER REFUSAL (redacted)";
 
 function scrubAnthropicRefusalMagic(prompt: string): string {
-  if (!prompt.includes(ANTHROPIC_MAGIC_STRING_TRIGGER_REFUSAL)) return prompt;
+  if (!prompt || !prompt.includes(ANTHROPIC_MAGIC_STRING_TRIGGER_REFUSAL)) return prompt;
   return prompt.replaceAll(
     ANTHROPIC_MAGIC_STRING_TRIGGER_REFUSAL,
     ANTHROPIC_MAGIC_STRING_REPLACEMENT,
@@ -153,7 +153,7 @@ export async function runEmbeddedPiAgent(
         provider,
         preferredProfile: preferredProfileId,
       });
-      if (lockedProfileId && !profileOrder.includes(lockedProfileId)) {
+      if (lockedProfileId && !(profileOrder ?? []).includes(lockedProfileId)) {
         throw new Error(`Auth profile "${lockedProfileId}" is not configured for ${provider}.`);
       }
       const profileCandidates = lockedProfileId
